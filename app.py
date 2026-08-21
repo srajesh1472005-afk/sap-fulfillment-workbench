@@ -54,6 +54,21 @@ st.markdown("""
     .badge-high { background-color: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-mid { background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-low { background-color: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+    /* Smooth Tab Fade-In Transition Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .tab-container {
+        animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -118,6 +133,8 @@ app_mode = st.sidebar.radio(
 
 st.sidebar.markdown("---")
 st.sidebar.info("💡 **KaarTech Assessment Tip:** Use the AI Risk engine to filter high-probability delays and execute immediate credit/stock overrides.")
+
+st.markdown('<div class="tab-container">', unsafe_allow_html=True)
 
 # ==========================================
 # TAB 1: EXECUTIVE DASHBOARD
@@ -311,6 +328,8 @@ elif app_mode == "⚙️ SAP T-Code & Audit Log":
         {"Timestamp": "2026-08-21 17:10:00", "User": "Rajesh S", "Action": "PR Created for Stockout", "Object": "SAP-MAT-502"}
     ]
     st.table(pd.DataFrame(audit_logs))
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # --- FOOTER ---
 st.markdown("---")
