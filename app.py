@@ -13,21 +13,48 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CUSTOM SAP FIORI STYLING ---
+# --- CUSTOM SAP FIORI STYLING & TRANSITIONS ---
 st.markdown("""
     <style>
+    /* Global Background & Font */
     .main {
-        background-color: #f5f7fa;
+        background-color: #f8fafc;
+        font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
     }
-    .stMetric {
-        background-color: #ffffff;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    
+    /* Sleek Card Styling with Hover Transition */
+    div[data-testid="stMetric"] {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        border-left: 5px solid #0070f2;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .css-1v0mbdj {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    div[data-testid="stMetric"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
     }
+
+    /* Custom Headers & Titles */
+    h1, h2, h3 {
+        color: #0f172a;
+        font-weight: 700;
+    }
+
+    /* Sidebar Styling */
+    [data-testid="stSidebar"] {
+        background-color: #0f172a;
+        color: #f8fafc;
+    }
+    [data-testid="stSidebar"] .stRadio label, [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] span {
+        color: #cbd5e1 !important;
+    }
+
+    /* Status Pill Badges */
+    .badge-high { background-color: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+    .badge-mid { background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+    .badge-low { background-color: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     </style>
 """, unsafe_allow_html=True)
 
