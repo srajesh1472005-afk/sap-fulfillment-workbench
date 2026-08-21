@@ -22,18 +22,17 @@ st.markdown("""
         font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
     }
     
-    /* Sleek Card Styling with Hover Transition */
+    /* Sleek Card Styling with Hover Transition - Theme Adaptive */
     div[data-testid="stMetric"] {
-        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
         padding: 20px;
         border-radius: 12px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         border-left: 5px solid #0070f2;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     div[data-testid="stMetric"]:hover {
         transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom Headers & Titles */
