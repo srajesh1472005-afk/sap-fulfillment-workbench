@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CUSTOM SAP FIORI STYLING & TRANSITIONS ---
+# --- CUSTOM SAP FIORI STYLING & TOP TABS ENHANCEMENT ---
 st.markdown("""
     <style>
     /* Global Background & Font */
@@ -46,29 +46,38 @@ st.markdown("""
         background-color: #0f172a;
         color: #f8fafc;
     }
-    [data-testid="stSidebar"] .stRadio label, [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] span {
+    [data-testid="stSidebar"] .stMarkdown, [data-testid="stSidebar"] span {
         color: #cbd5e1 !important;
+    }
+
+    /* Top Tabs Custom Styling */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+        background-color: #ffffff;
+        padding: 10px 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .stTabs [data-baseweb="tab"] {
+        height: 45px;
+        white-space: pre-wrap;
+        background-color: #f1f5f9;
+        border-radius: 8px;
+        color: #334155;
+        font-weight: 600;
+        padding: 0 20px;
+        transition: all 0.2s ease;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #0070f2 !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(0, 112, 242, 0.3);
     }
 
     /* Status Pill Badges */
     .badge-high { background-color: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-mid { background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-low { background-color: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
-
-    /* Smooth Tab Fade-In Transition Animation */
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .tab-container {
-        animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -114,34 +123,36 @@ ml_model.fit(X, y)
 
 df['AI_Delay_Probability'] = ml_model.predict_proba(X)[:, 1] * 100
 
-# --- SIDEBAR ---
+# --- SIDEBAR INFO ---
 st.sidebar.image("https://img.icons8.com/color/96/sap.png", width=60)
 st.sidebar.title("KaarTech Enterprise")
 st.sidebar.markdown("**SAP S/4HANA O2C & MM Suite**")
 st.sidebar.markdown("---")
-
-app_mode = st.sidebar.radio(
-    "Navigation Workspace",
-    [
-        "📊 Executive KPI Dashboard", 
-        "📋 Order-to-Cash (SD) Workbench", 
-        "🤖 AI Predictive Risk Engine", 
-        "📦 Inventory & MM Hub",
-        "⚙️ SAP T-Code & Audit Log"
-    ]
-)
-
-st.sidebar.markdown("---")
 st.sidebar.info("💡 **KaarTech Assessment Tip:** Use the AI Risk engine to filter high-probability delays and execute immediate credit/stock overrides.")
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Candidate:** Rajesh S (2027 Batch)")
+st.sidebar.markdown("**Target Role:** Tech Sergeant / Lieutenant")
 
-st.markdown('<div class="tab-container">', unsafe_allow_html=True)
+# --- MAIN APP HEADER ---
+st.title("⚡ KaarTech SAP Enterprise Order & Risk Workbench")
+st.markdown("Real-time operational intelligence across SAP SD (Order-to-Cash) and MM (Materials Management).")
+st.markdown("---")
+
+# --- TOP TABS NAVIGATION ---
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📊 Executive KPI Dashboard", 
+    "📋 Order-to-Cash (SD) Workbench", 
+    "🤖 AI Predictive Risk Engine", 
+    "📦 Inventory & MM Hub",
+    "⚙️ SAP T-Code & Audit Log"
+])
 
 # ==========================================
 # TAB 1: EXECUTIVE DASHBOARD
 # ==========================================
-if app_mode == "📊 Executive KPI Dashboard":
-    st.title("📊 Executive Order Fulfillment & Risk Dashboard")
-    st.markdown("Real-time operational visibility across SAP SD (Order-to-Cash) and MM (Materials Management) modules.")
+with tab1:
+    st.subheader("📊 Executive Order Fulfillment & Risk Dashboard")
+    st.markdown("Real-time operational visibility across SAP SD and MM modules.")
     st.markdown("---")
 
     col1, col2, col3, col4 = st.columns(4)
@@ -174,19 +185,19 @@ if app_mode == "📊 Executive KPI Dashboard":
 # ==========================================
 # TAB 2: ORDER-TO-CASH WORKBENCH
 # ==========================================
-elif app_mode == "📋 Order-to-Cash (SD) Workbench":
-    st.title("📋 Order-to-Cash (SD) Exception Workbench")
+with tab2:
+    st.subheader("📋 Order-to-Cash (SD) Exception Workbench")
     st.markdown("Monitor sales orders (`VA01`), evaluate credit blocks (`V.06`), and execute end-to-end fulfillment actions.")
     st.markdown("---")
 
     # Filters
     f1, f2, f3 = st.columns(3)
     with f1:
-        selected_plant = st.selectbox("Filter Plant", ["All Plants"] + list(df['Plant'].unique()))
+        selected_plant = st.selectbox("Filter Plant", ["All Plants"] + list(df['Plant'].unique()), key="sd_plant")
     with f2:
-        risk_filter = st.selectbox("Risk Filter", ["All Orders", "High Risk (>70%)", "Normal Risk"])
+        risk_filter = st.selectbox("Risk Filter", ["All Orders", "High Risk (>70%)", "Normal Risk"], key="sd_risk")
     with f3:
-        only_credit = st.checkbox("Show Only Credit Blocked Orders", value=False)
+        only_credit = st.checkbox("Show Only Credit Blocked Orders", value=False, key="sd_credit")
 
     view_df = df.copy()
     if selected_plant != "All Plants":
@@ -213,7 +224,7 @@ elif app_mode == "📋 Order-to-Cash (SD) Workbench":
     st.markdown("---")
     st.subheader("⚡ Execute SAP Workflow Action")
     
-    selected_ord_id = st.selectbox("Select Order ID for Action", view_df['Order_ID'].unique() if len(view_df) > 0 else ["No Orders Available"])
+    selected_ord_id = st.selectbox("Select Order ID for Action", view_df['Order_ID'].unique() if len(view_df) > 0 else ["No Orders Available"], key="sd_action_ord")
     
     if selected_ord_id != "No Orders Available":
         ord_row = df[df['Order_ID'] == selected_ord_id].iloc[0]
@@ -234,9 +245,9 @@ elif app_mode == "📋 Order-to-Cash (SD) Workbench":
                 "Approve Credit Override (T-Code: V.06)",
                 "Trigger Emergency Stock Replenishment (T-Code: ME51N)",
                 "Escalate to Regional Sales Head"
-            ])
+            ], key="sd_workflow_radio")
             
-            if st.button("Execute Workflow in SAP S/4HANA"):
+            if st.button("Execute Workflow in SAP S/4HANA", key="sd_exec_btn"):
                 if "Credit" in action_type:
                     st.success(f"✅ Credit block released for `{selected_ord_id}`. Audit log updated in SAP table VBUK.")
                 elif "Replenishment" in action_type:
@@ -247,8 +258,8 @@ elif app_mode == "📋 Order-to-Cash (SD) Workbench":
 # ==========================================
 # TAB 3: AI PREDICTIVE RISK ENGINE
 # ==========================================
-elif app_mode == "🤖 AI Predictive Risk Engine":
-    st.title("🤖 AI Predictive Risk & Decision Engine")
+with tab3:
+    st.subheader("🤖 AI Predictive Risk & Decision Engine")
     st.markdown("Powered by Random Forest machine learning surrogate model trained on historical enterprise fulfillment runs.")
     st.markdown("---")
 
@@ -263,11 +274,11 @@ elif app_mode == "🤖 AI Predictive Risk Engine":
 
     with cl2:
         st.subheader("🔍 Simulate Order Risk (What-If Analysis)")
-        sim_qty = st.slider("Simulated Order Quantity", 50, 2000, 500)
-        sim_stock = st.slider("Current Stock Level", 50, 2000, 300)
-        sim_lead = st.slider("Lead Time (Days)", 1, 30, 10)
-        sim_credit = st.selectbox("Credit Limit Exceeded?", [0, 1], format_func=lambda x: "Yes (Blocked)" if x==1 else "No (Cleared)")
-        sim_val = st.slider("Order Value ($)", 5000, 250000, 50000)
+        sim_qty = st.slider("Simulated Order Quantity", 50, 2000, 500, key="ai_qty")
+        sim_stock = st.slider("Current Stock Level", 50, 2000, 300, key="ai_stock")
+        sim_lead = st.slider("Lead Time (Days)", 1, 30, 10, key="ai_lead")
+        sim_credit = st.selectbox("Credit Limit Exceeded?", [0, 1], format_func=lambda x: "Yes (Blocked)" if x==1 else "No (Cleared)", key="ai_credit")
+        sim_val = st.slider("Order Value ($)", 5000, 250000, 50000, key="ai_val")
 
         sim_deficit = max(0, sim_qty - sim_stock)
         input_data = pd.DataFrame([[sim_qty, sim_stock, sim_lead, sim_credit, sim_val]],
@@ -285,8 +296,8 @@ elif app_mode == "🤖 AI Predictive Risk Engine":
 # ==========================================
 # TAB 4: INVENTORY & MM HUB
 # ==========================================
-elif app_mode == "📦 Inventory & MM Hub":
-    st.title("📦 Inventory & Materials Management (MM) Hub")
+with tab4:
+    st.subheader("📦 Inventory & Materials Management (MM) Hub")
     st.markdown("Monitor material stock levels (`MM03`), stockout deficits, and automated replenishment triggers.")
     st.markdown("---")
 
@@ -304,8 +315,8 @@ elif app_mode == "📦 Inventory & MM Hub":
 # ==========================================
 # TAB 5: SAP T-CODE & AUDIT LOG
 # ==========================================
-elif app_mode == "⚙️ SAP T-Code & Audit Log":
-    st.title("⚙️ SAP S/4HANA Transaction Audit Log")
+with tab5:
+    st.subheader("⚙️ SAP S/4HANA Transaction Audit Log")
     st.markdown("Reference guide for standard SAP T-Codes integrated into this workbench application.")
     st.markdown("---")
 
@@ -328,8 +339,6 @@ elif app_mode == "⚙️ SAP T-Code & Audit Log":
         {"Timestamp": "2026-08-21 17:10:00", "User": "Rajesh S", "Action": "PR Created for Stockout", "Object": "SAP-MAT-502"}
     ]
     st.table(pd.DataFrame(audit_logs))
-
-st.markdown('</div>', unsafe_allow_html=True)
 
 # --- FOOTER ---
 st.markdown("---")
