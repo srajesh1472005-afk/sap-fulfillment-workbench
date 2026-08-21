@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CUSTOM SAP FIORI STYLING & TOP TABS ENHANCEMENT ---
+# --- CUSTOM SAP FIORI STYLING & NOTICEABLE TRANSITION ANIMATION ---
 st.markdown("""
     <style>
     /* Global Background & Font */
@@ -78,6 +78,21 @@ st.markdown("""
     .badge-high { background-color: #fee2e2; color: #991b1b; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-mid { background-color: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
     .badge-low { background-color: #d1fae5; color: #065f46; padding: 4px 10px; border-radius: 6px; font-weight: 600; }
+
+    /* Visible & Smooth Tab Transition Animation */
+    @keyframes smoothSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(25px) scale(0.98);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+    .tab-container {
+        animation: smoothSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -151,6 +166,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 # TAB 1: EXECUTIVE DASHBOARD
 # ==========================================
 with tab1:
+    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     st.subheader("📊 Executive Order Fulfillment & Risk Dashboard")
     st.markdown("Real-time operational visibility across SAP SD and MM modules.")
     st.markdown("---")
@@ -181,11 +197,13 @@ with tab1:
                              size="Order_Qty", hover_data=["Order_ID", "Customer"],
                              color_continuous_scale="Turbo", title="Order Value vs Delivery Lead Time Risk")
         st.plotly_chart(fig_rev, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
 # TAB 2: ORDER-TO-CASH WORKBENCH
 # ==========================================
 with tab2:
+    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     st.subheader("📋 Order-to-Cash (SD) Exception Workbench")
     st.markdown("Monitor sales orders (`VA01`), evaluate credit blocks (`V.06`), and execute end-to-end fulfillment actions.")
     st.markdown("---")
@@ -254,11 +272,13 @@ with tab2:
                     st.warning(f"⚠️ Purchase Requisition generated for material `{ord_row['Material']}` to plant `{ord_row['Plant']}`.")
                 else:
                     st.info(f"ℹ️ Order `{selected_ord_id}` escalated successfully.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
 # TAB 3: AI PREDICTIVE RISK ENGINE
 # ==========================================
 with tab3:
+    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     st.subheader("🤖 AI Predictive Risk & Decision Engine")
     st.markdown("Powered by Random Forest machine learning surrogate model trained on historical enterprise fulfillment runs.")
     st.markdown("---")
@@ -292,11 +312,13 @@ with tab3:
             st.warning("🟠 Moderate Risk: Monitor closely during delivery scheduling.")
         else:
             st.success("🟢 Low Risk: Standard order-to-cash processing approved.")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
 # TAB 4: INVENTORY & MM HUB
 # ==========================================
 with tab4:
+    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     st.subheader("📦 Inventory & Materials Management (MM) Hub")
     st.markdown("Monitor material stock levels (`MM03`), stockout deficits, and automated replenishment triggers.")
     st.markdown("---")
@@ -311,11 +333,13 @@ with tab4:
                          hover_data=["Material", "Plant", "Stock_Deficit"],
                          title="Stock Level vs Order Demand across Plants")
     st.plotly_chart(fig_inv, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
 # TAB 5: SAP T-CODE & AUDIT LOG
 # ==========================================
 with tab5:
+    st.markdown('<div class="tab-container">', unsafe_allow_html=True)
     st.subheader("⚙️ SAP S/4HANA Transaction Audit Log")
     st.markdown("Reference guide for standard SAP T-Codes integrated into this workbench application.")
     st.markdown("---")
@@ -339,6 +363,7 @@ with tab5:
         {"Timestamp": "2026-08-21 17:10:00", "User": "Rajesh S", "Action": "PR Created for Stockout", "Object": "SAP-MAT-502"}
     ]
     st.table(pd.DataFrame(audit_logs))
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # --- FOOTER ---
 st.markdown("---")
